@@ -1,0 +1,104 @@
+id: EXCESSIVE_DATA_EXPOSURE
+info:
+  name: "BOPLA - Excessive Data Exposure"
+  description: "The endpoint appears to be vulnerable to Broken Object Property Level Authorization due to excessive data exposure. The API response contains sensitive object properties that should not be exposed to the client."
+  details: >
+    "The endpoint appears to be vulnerable to Broken Object Property Level Authorization due to excessive data exposure. The original request was replayed and the application responded with a 2XX success code while exposing sensitive object properties in the response payload.
+    <b>Background:</b>
+    APIs often return object data to clients. Some object properties are safe to expose, while others should remain internal or restricted, such as passwords, tokens, secrets, roles, permissions, internal IDs, financial data, or personally identifiable information.\n"
+    "An API endpoint is vulnerable if it exposes sensitive object properties to a user who should not have access to those properties. This commonly happens when APIs return complete database objects and rely on the client side to filter the response.\n"
+    "Examples of sensitive properties:
+    Authentication-related properties: password, token, access_token, refresh_token, api_key, secret.
+    Permission-related properties: role, is_admin, is_vip, permissions.
+    Personal data: ssn, aadhaar, pan, passport, credit_card, card_number.
+    Internal properties: internal_id, account_balance, salary, created_by, deleted_at."
+  impact: "Exploitation can lead to disclosure of sensitive user data, credential leakage, privilege information exposure, privacy violations, and further account takeover or privilege escalation attacks."
+  category:
+    name: BOPLA
+    shortName: BOPLA
+    displayName: Broken Object Property Level Authorization
+  subCategory: EXCESSIVE_DATA_EXPOSURE
+  severity: HIGH
+  tags:
+    - Business logic
+    - OWASP top 10
+    - HackerOne top 10
+    - Excessive Data Exposure
+  references:
+    - "https://owasp.org/API-Security/editions/2023/en/0xa3-broken-object-property-level-authorization/"
+    - "https://owasp.org/API-Security/editions/2019/en/0xa3-excessive-data-exposure/"
+  cwe:
+    - CWE-200
+    - CWE-213
+    - CWE-359
+
+api_selection_filters:
+  response_code:
+    gte: 200
+    lt: 300
+
+  response_payload:
+    for_one:
+      key:
+        contains_either:
+          - password
+          - passwd
+          - pwd
+          - token
+          - access_token
+          - refresh_token
+          - id_token
+          - auth_token
+          - api_key
+          - apikey
+          - apiKey
+          - secret
+          - client_secret
+          - private_key
+          - privateKey
+          - session_id
+          - sessionId
+          - cookie
+          - role
+          - permissions
+          - is_admin
+          - isAdmin
+          - is_vip
+          - isVip
+          - ssn
+          - aadhaar
+          - aadhar
+          - pan
+          - passport
+          - credit_card
+          - creditCard
+          - card_number
+          - cardNumber
+          - cvv
+          - account_balance
+          - accountBalance
+          - salary
+          - internal_id
+          - internalId
+          - deleted_at
+          - deletedAt
+        extract: sensitive_key
+
+  param_context:
+    param: ${sensitive_key}
+    extract: sensitive_context
+
+execute:
+  type: single
+  requests:
+    - req: []
+
+validate:
+  response_code:
+    gte: 200
+    lt: 300
+
+  response_payload:
+    for_one:
+      key:
+        eq: ${sensitive_key}
