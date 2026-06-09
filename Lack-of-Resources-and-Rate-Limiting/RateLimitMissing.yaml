@@ -1,0 +1,38 @@
+id: RATE_LIMIT_MISSING
+info:
+  name: Missing Rate Limit
+  description: Tests whether an API endpoint allows repeated requests in a short window without throttling.
+  details: >
+    The Go testing worker replays the same raw API request using the configured
+    burstCount and windowSeconds values. The endpoint is considered vulnerable
+    when repeated requests continue to succeed without throttling signals such
+    as HTTP 429, Retry-After, X-RateLimit-* headers, or RateLimit-* headers.
+  impact: >
+    Attackers can repeatedly call this endpoint to consume backend resources,
+    abuse business workflows, brute-force credentials, or increase infrastructure
+    cost.
+  severity: HIGH
+  category:
+    name: API4
+    shortName: Unrestricted Resource Consumption
+    displayName: API4:2023 - Unrestricted Resource Consumption
+  subCategory: RATE_LIMIT_MISSING
+  tags:
+    - API4
+    - OWASP API Top 10
+    - Rate Limit
+    - Resource Consumption
+  references:
+    - https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/
+  cwe:
+    - CWE-770
+    - CWE-799
+api_selection_filters:
+  response_code:
+    gte: 200
+    lt: 300
+execute:
+  type: single
+validate:
+  response_code:
+    neq: 429
