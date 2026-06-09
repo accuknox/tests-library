@@ -1,0 +1,54 @@
+id: GRAPHQL_FIELD_SUGGESTION_ENABLED
+info:
+  name: GraphQL Field Suggestion Enabled
+  description: Tests whether GraphQL field suggestions expose schema details through error messages.
+  details: >
+    GraphQL field suggestions can reveal valid field names and schema structure
+    when clients submit malformed queries. Attackers can use this information to
+    discover sensitive objects and craft more targeted attacks.
+  impact: >
+    Exposed GraphQL schema hints may leak implementation details, object names,
+    and field names that help attackers enumerate the API.
+  category:
+    name: SM
+    shortName: Misconfiguration
+    displayName: Security Misconfiguration (SM)
+  subCategory: GRAPHQL_FIELD_SUGGESTION_ENABLED
+  severity: LOW
+  tags:
+    - GraphQL
+    - Business logic
+    - OWASP top 10
+    - HackerOne top 10
+  references:
+    - "https://nostarch.com/black-hat-graphql"
+    - "https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html"
+    - "https://0xn3va.gitbook.io/cheat-sheets/web-application/graphql-vulnerabilities"
+  cwe:
+    - CWE-16
+    - CWE-200
+  cve:
+    - CVE-2023-5192
+
+api_selection_filters:
+  url:
+    regex: graphql
+
+execute:
+  type: single
+  requests:
+    - req:
+        - modify_url:
+            regex_replace:
+              regex: graphql.*
+              replace_with: graphql
+        - replace_body: '{ "query": "query IntrospectionQuery { __schema { queryType { nam } mutationType { name } types { name } } }" }'
+
+validate:
+  response_payload:
+    contains_either:
+      - "Did you mean"
+      - "Expected value of type"
+
+strategy:
+  run_once: /

@@ -1,0 +1,45 @@
+id: INPUT
+info:
+  name: Sensitive Business Flow Input Replay
+  description: Tests whether a sensitive business-flow endpoint can be replayed without additional protection.
+  details: >
+    Sensitive business flows, such as signup, checkout, OTP, invitation, or
+    other abuse-prone workflows, should include protections that prevent simple
+    automated replay. This test replays the original request and checks whether
+    the API continues to accept it successfully.
+  impact: >
+    Attackers may automate sensitive workflows, causing spam, quota exhaustion,
+    fake account creation, inventory abuse, or other business-flow abuse.
+  category:
+    name: API6
+    shortName: Sensitive Business Flows
+    displayName: API6:2023 - Unrestricted Access to Sensitive Business Flows
+  subCategory: INPUT
+  severity: MEDIUM
+  tags:
+    - Business logic
+    - OWASP top 10
+    - Sensitive Business Flow
+  references:
+    - "https://owasp.org/API-Security/editions/2023/en/0xa6-unrestricted-access-to-sensitive-business-flows/"
+  cwe:
+    - CWE-799
+    - CWE-840
+
+api_selection_filters:
+  response_code:
+    gte: 200
+    lt: 300
+
+execute:
+  type: single
+  requests:
+    - req: []
+
+validate:
+  response_code:
+    gte: 200
+    lt: 300
+  response_payload:
+    length:
+      gt: 0
