@@ -22,7 +22,6 @@ info:
     - HackerOne top 10
   references:
     - "https://github.com/OWASP/API-Security/blob/master/2023/en/src/0xa6-server-side-request-forgery.md"
-    - "https://www.akto.io/blog/how-to-prevent-server-side-request-forgery-ssrf-as-a-developer"
     - "https://www.cobalt.io/blog/from-ssrf-to-port-scanner"
   cwe:
     - CWE-918
